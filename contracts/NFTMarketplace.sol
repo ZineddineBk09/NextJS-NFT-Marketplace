@@ -4,23 +4,24 @@ pragma solidity ^0.8.7;
 
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 
-// Errors
+// ---------------------- Errors ---------------------- 
 error NFTMarketplace__PriceMustBeAboveZero();
 error NFTMarketplace__NotApprovedForMarketplace();
 error NFTMarketplace__AlreadyListed(address nftAddress, uint256 tokenId);
+error NFTMarketplace__NotOwner();
+
+// ---------------------- Types ---------------------- 
+struct Listing {
+    uint256 price;
+    address seller;
+}
 
 contract NFTMarketplace {
-    // Types
-    struct Listing {
-        uint256 price;
-        address seller;
-    }
-
-    // State variables
+    // ---------------------- State variables ---------------------- 
     // NFT contract address => token ID => listing
     mapping(address => mapping(uint256 => Listing)) private s_listings;
 
-    // Modifiers
+    // ---------------------- Modifiers ---------------------- 
     modifier notListed(
         address nftAddress,
         uint256 tokenId,
@@ -34,7 +35,19 @@ contract NFTMarketplace {
         _;
     }
 
-    // Events
+    modifier isOwner(
+        address nftAddress,
+        uint256 tokenId,
+        address owner
+    ) {
+        IERC721 nftContract = IERC721(nftAddress);
+        if (nftContract.ownerOf(tokenId) != owner) {
+            revert NFTMarketplace__NotOwner();
+        }
+        _;
+    }
+
+    // ---------------------- Events ---------------------- 
     event ItemListed(
         address indexed seller,
         address indexed nftAddress,
@@ -42,12 +55,16 @@ contract NFTMarketplace {
         uint256 price
     );
 
-    // Functions
+    // ---------------------- Functions ---------------------- 
     function listIem(
         address nftAddress,
         uint256 tokenId,
         uint256 price
-    ) external {
+    )
+        external
+        notListed(nftAddress, tokenId, msg.sender)
+        isOwner(nftAddress, tokenId, msg.sender)
+    {
         if (price <= 0) {
             revert NFTMarketplace__PriceMustBeAboveZero();
         }
