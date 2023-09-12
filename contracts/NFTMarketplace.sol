@@ -136,3 +136,6 @@ contract NFTMarketplace {
 // cancelItem: cancel NFTs from marketplace
 // updateListing: update NFTs price
 // withdrawProceeds: withdraw proceeds from sales
+
+// PULL OVER PUSH
+// pull over push is a security best practice in solidity, where you don't send funds to a user, but instead let them pull the funds from your contract.this is because if you send funds to a user, they can call a function in their contract that reverts, and then the funds will be stuck in your contract
