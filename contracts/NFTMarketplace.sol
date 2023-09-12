@@ -26,7 +26,7 @@ contract NFTMarketplace {
     // ---------------------- State variables ----------------------
     // NFT contract address => token ID => listing
     mapping(address => mapping(uint256 => Listing)) private s_listings;
-    // keep track of people balances: address => balance
+    // keep track of people balances (how much they have earned): sellerAddress => balance
     mapping(address => uint256) private s_proceeds;
 
     // ---------------------- Modifiers ----------------------
