@@ -138,8 +138,12 @@ contract NFTMarketplace {
 // withdrawProceeds: withdraw proceeds from sales
 
 // PULL OVER PUSH
-// pull over push is a security best practice in solidity, where you don't send funds to a user, but instead let them pull the funds from your contract.this is because if you send funds to a user, they can call a function in their contract that reverts, and then the funds will be stuck in your contract
+// Pull over push is a security best practice in solidity, where you don't send funds to a user, but instead let them pull the funds from your contract.this is because if you send funds to a user, they can call a function in their contract that reverts, and then the funds will be stuck in your contract
 
-// Reentrancy attack
-// Reentrancy attack is when a malicious contract calls a function in your contract, and then calls the same function again before the first call is finished. This can be used to drain funds from your contract.
+// Re-entrancy attack
+// Re-entrancy attack is when a malicious contract calls a function in your contract, and then calls the same function again before the first call is finished. This can be used to drain funds from your contract.
 // that's why we use pull over push, so change state before sending funds
+
+// Oracle attack
+// Happens usually when a protocol doesn't use a decentralized oracle like chainlink, and instead uses a centralized oracle. A malicious actor can then bribe the oracle to give a false price, and then drain funds from the protocol.
+// that's why we use chainlink price feeds
