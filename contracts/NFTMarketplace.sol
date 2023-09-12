@@ -127,12 +127,7 @@ contract NFTMarketplace {
             tokenId
         );
 
-        emit ItemBought(
-            msg.sender,
-            nftAddress,
-            tokenId,
-            listedItem.price,
-        );
+        emit ItemBought(msg.sender, nftAddress, tokenId, listedItem.price);
     }
 }
 
