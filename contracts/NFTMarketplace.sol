@@ -170,7 +170,19 @@ contract NFTMarketplace is ReentrancyGuard {
         if (proceeds <= 0) revert NFTMarketplace__NoProceedsToWithdraw();
         s_proceeds[msg.sender] = 0;
         (bool success, ) = payable(msg.sender).call{value: proceeds}("");
-        if(!success) revert NFTMarketplace__ProceedsTransferFailed();
+        if (!success) revert NFTMarketplace__ProceedsTransferFailed();
+    }
+
+    // ---------------------- Getters ----------------------
+    function getListing(
+        address nftAddress,
+        uint256 tokenId
+    ) external view returns (Listing memory) {
+        return s_listings[nftAddress][tokenId];
+    }
+
+    function getProceeds(address seller) external view returns (uint256) {
+        return s_proceeds[seller];
     }
 }
 
