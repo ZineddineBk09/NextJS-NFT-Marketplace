@@ -10,12 +10,12 @@ module.exports = async function ({ getNamedAccounts, deployments }) {
   log(
     '========================= Deploying NFT Markeplace Contract =========================='
   )
-
+  // args of the constructor of the NFTMarketplace contract
   const args = []
   const nftMarketplace = await deploy('NFTMarketplace', {
     from: deployer,
     args: args,
-    logs: true,
+    log: true,
     waitConfirmations: network.config.blockConfirmations || 1,
   })
 
@@ -24,7 +24,9 @@ module.exports = async function ({ getNamedAccounts, deployments }) {
     !developmentChains.includes(network.name) &&
     process.env.ETHERSCAN_API_KEY
   ) {
-    log(`Verifying NFT Markeplace Contract on ${network.name} network...⌛⌛`)
+    log(
+      `Verifying NFT Markeplace Contract on ${network.name.toUpperCase()} network...⌛⌛`
+    )
     await verify(nftMarketplace.address, args)
     log(`NFT Markeplace Contract verified! ✅✅`)
   }
@@ -33,3 +35,5 @@ module.exports = async function ({ getNamedAccounts, deployments }) {
     `========================= Done Deploying NFT Markeplace Contract ✅ =========================`
   )
 }
+
+module.exports.tags = ['all', 'nftmarketplace']
