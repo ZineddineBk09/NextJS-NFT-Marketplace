@@ -16,6 +16,8 @@ error NFTMarketplace__PriceNotMet(
     uint256 tokenId,
     uint256 price
 );
+error NFTMarketplace__NoProceedsToWithdraw();
+error NFTMarketplace__ProceedsTransferFailed();
 
 // ---------------------- Types ----------------------
 struct Listing {
@@ -161,6 +163,14 @@ contract NFTMarketplace is ReentrancyGuard {
         s_listings[nftAddress][tokenId].price = newPrice;
         // re-listing the item with new price
         emit ItemListed(msg.sender, nftAddress, tokenId, newPrice);
+    }
+
+    function withdrawProceeds() external {
+        uint256 proceeds = s_proceeds[msg.sender];
+        if (proceeds <= 0) revert NFTMarketplace__NoProceedsToWithdraw();
+        s_proceeds[msg.sender] = 0;
+        (bool success, ) = payable(msg.sender).call{value: proceeds}("");
+        if(!success) revert NFTMarketplace__ProceedsTransferFailed();
     }
 }
 
